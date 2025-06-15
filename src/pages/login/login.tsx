@@ -1,11 +1,11 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   clearErrorMessage,
-  selectError,
-  fetchLoginUser
+  fetchLoginUser,
+  selectError
 } from '../../services/slices/authSlice';
 
 export const Login: FC = () => {
@@ -14,12 +14,16 @@ export const Login: FC = () => {
   const dispatch = useDispatch();
   const error = useSelector(selectError);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || { pathname: '/' };
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     const data = { email, password };
-    dispatch(fetchLoginUser(data));
-    navigate('/');
+
+    dispatch(fetchLoginUser(data)).then(() => {
+      navigate(from);
+    });
   };
 
   useEffect(() => {

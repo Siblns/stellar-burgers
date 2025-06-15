@@ -24,7 +24,7 @@ export const clearTokens = () => {
 };
 
 export const fetchRegisterUser = createAsyncThunk(
-  'register/fetchRegisterUser',
+  'auth/fetchRegisterUser',
   async (data: TRegisterData) => {
     const result = await registerUserApi(data);
     saveTokens(result);
@@ -33,7 +33,7 @@ export const fetchRegisterUser = createAsyncThunk(
 );
 
 export const fetchLoginUser = createAsyncThunk(
-  'login/fetchLoginUser',
+  'auth/fetchLoginUser',
   async (data: TLoginData) => {
     const result = await loginUserApi(data);
     saveTokens(result);
@@ -41,122 +41,122 @@ export const fetchLoginUser = createAsyncThunk(
   }
 );
 
-export const fetchGetUser = createAsyncThunk('user/fetchGetUser', async () =>
+export const fetchGetUser = createAsyncThunk('auth/fetchGetUser', async () =>
   getUserApi()
 );
 
 export const fetchUpdateUser = createAsyncThunk(
-  'user/fetchUpdateUser',
+  'auth/fetchUpdateUser',
   async (user: Partial<TRegisterData>) => updateUserApi(user)
 );
 
-export const fetchLogout = createAsyncThunk('logout/fetchLogout', async () => {
+export const fetchLogout = createAsyncThunk('auth/fetchLogout', async () => {
   await logoutApi();
   clearTokens();
 });
 
 interface IAuthState {
   isAuthenticated: boolean;
-  data: TUser;
+  user: TUser;
   error: string | undefined;
-  loginUserRequest: boolean;
+  loading: boolean;
 }
 
 const initialState: IAuthState = {
-  isAuthenticated: false,
-  data: {
+  isAuthenticated: !!getCookie('accessToken'), // изначально проверяем токен
+  user: {
     name: '',
     email: ''
   },
   error: undefined,
-  loginUserRequest: false
+  loading: false
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    clearErrorMessage: (state) => {
+    clearErrorMessage(state) {
       state.error = '';
     }
-  },
-  selectors: {
-    selectUserData: (state) => state.data,
-    selectIsAuthenticated: (state) => state.isAuthenticated,
-    selectError: (state) => state.error,
-    selectloginRequest: (state) => state.loginUserRequest
   },
   extraReducers(builder) {
     builder
       .addCase(fetchRegisterUser.pending, (state) => {
-        state.isAuthenticated = false;
+        state.loading = true;
       })
       .addCase(fetchRegisterUser.rejected, (state, action) => {
-        state.isAuthenticated = false;
+        state.loading = false;
         state.error = action.error.message;
       })
       .addCase(fetchRegisterUser.fulfilled, (state, action) => {
+        state.loading = false;
         state.isAuthenticated = true;
-        state.data.email = action.payload.user.email;
-        state.data.name = action.payload.user.name;
+        state.user = action.payload.user;
+        state.error = '';
       })
+
       .addCase(fetchLoginUser.pending, (state) => {
-        state.isAuthenticated = false;
+        state.loading = true;
       })
       .addCase(fetchLoginUser.rejected, (state, action) => {
-        state.isAuthenticated = false;
+        state.loading = false;
         state.error = action.error.message;
       })
       .addCase(fetchLoginUser.fulfilled, (state, action) => {
+        state.loading = false;
         state.isAuthenticated = true;
-        state.data.email = action.payload.user.email;
-        state.data.name = action.payload.user.name;
+        state.user = action.payload.user;
+        state.error = '';
       })
+
       .addCase(fetchGetUser.pending, (state) => {
-        state.loginUserRequest = true;
-        state.isAuthenticated = false;
+        state.loading = true;
       })
       .addCase(fetchGetUser.rejected, (state, action) => {
-        state.loginUserRequest = false;
-        state.isAuthenticated = false;
+        state.loading = false;
         state.error = action.error.message;
       })
       .addCase(fetchGetUser.fulfilled, (state, action) => {
-        state.data = action.payload.user;
-        state.loginUserRequest = false;
+        state.loading = false;
+        state.user = action.payload.user;
+        state.error = '';
       })
+
       .addCase(fetchUpdateUser.pending, (state) => {
-        state.loginUserRequest = true;
+        state.loading = true;
       })
       .addCase(fetchUpdateUser.rejected, (state, action) => {
-        state.loginUserRequest = true;
+        state.loading = false;
         state.error = action.error.message;
       })
       .addCase(fetchUpdateUser.fulfilled, (state, action) => {
-        state.data = action.payload.user;
-        state.isAuthenticated = true;
-        state.loginUserRequest = false;
+        state.loading = false;
+        state.user = action.payload.user;
+        state.error = '';
       })
+
       .addCase(fetchLogout.pending, (state) => {
-        state.loginUserRequest = true;
+        state.loading = true;
       })
       .addCase(fetchLogout.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.error.message;
-        state.loginUserRequest = true;
       })
       .addCase(fetchLogout.fulfilled, (state) => {
+        state.loading = false;
         state.isAuthenticated = false;
-        state.loginUserRequest = false;
-        state.data = { name: '', email: '' };
+        state.user = { name: '', email: '' };
+        state.error = '';
       });
   }
 });
 
 export const { clearErrorMessage } = authSlice.actions;
-export const {
-  selectUserData,
-  selectloginRequest,
-  selectError,
-  selectIsAuthenticated
-} = authSlice.selectors;
+
+export const selectUserData = (state: any) => state.auth.user;
+export const selectIsAuthenticated = (state: any) => state.auth.isAuthenticated;
+export const selectLoading = (state: any) => state.auth.loading;
+export const selectError = (state: any) => state.auth.error;
+
 export const authReducer = authSlice.reducer;

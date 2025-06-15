@@ -4,7 +4,8 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from '../../services/store';
 import {
   selectIsAuthenticated,
-  selectloginRequest
+  selectLoading,
+  selectUserData
 } from '../../services/slices/authSlice';
 import { Preloader } from '@ui';
 
@@ -14,9 +15,8 @@ type TProtectedRoute = {
 };
 
 function ProtectedRoute({ children, isPublic = false }: TProtectedRoute) {
-  const user = useSelector((state) => state.auth.data.name);
   const isAuthCheck = useSelector(selectIsAuthenticated);
-  const loginUserRequest = useSelector(selectloginRequest);
+  const loginUserRequest = useSelector(selectLoading);
 
   const location = useLocation();
   const from = location.state?.from || { pathname: '/' };
@@ -30,7 +30,7 @@ function ProtectedRoute({ children, isPublic = false }: TProtectedRoute) {
   }
 
   if (isAuthCheck && isPublic) {
-    return <Navigate to='/' />;
+    return <Navigate to={from} />;
   }
 
   return children;

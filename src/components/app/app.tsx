@@ -32,7 +32,7 @@ const AppRoute = () => {
   useEffect(() => {
     dispatch(fetchIngredients());
     dispatch(fetchGetUser());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
@@ -95,6 +95,14 @@ const AppRoute = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path='/feed/:number'
+          element={
+            <ProtectedRoute>
+              <OrderInfo />
+            </ProtectedRoute>
+          }
+        />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
       {background && (
@@ -102,9 +110,11 @@ const AppRoute = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Информация о заказе' onClose={handleCloseModals}>
-                <OrderInfo />
-              </Modal>
+              <ProtectedRoute>
+                <Modal title='Информация о заказе' onClose={handleCloseModals}>
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
             }
           />
           <Route
@@ -118,9 +128,11 @@ const AppRoute = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Профиль пользователя' onClose={handleCloseModals}>
-                <OrderInfo />
-              </Modal>
+              <ProtectedRoute>
+                <Modal title='Профиль пользователя' onClose={handleCloseModals}>
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
             }
           />
         </Routes>
