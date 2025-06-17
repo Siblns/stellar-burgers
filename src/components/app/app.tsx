@@ -39,6 +39,8 @@ const AppRoute = () => {
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route
           path='/login'
           element={
@@ -95,14 +97,6 @@ const AppRoute = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path='/feed/:number'
-          element={
-            <ProtectedRoute>
-              <OrderInfo />
-            </ProtectedRoute>
-          }
-        />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
       {background && (
@@ -110,11 +104,9 @@ const AppRoute = () => {
           <Route
             path='/feed/:number'
             element={
-              <ProtectedRoute>
-                <Modal title='Информация о заказе' onClose={handleCloseModals}>
-                  <OrderInfo />
-                </Modal>
-              </ProtectedRoute>
+              <Modal title='Информация о заказе' onClose={handleCloseModals}>
+                <OrderInfo />
+              </Modal>
             }
           />
           <Route

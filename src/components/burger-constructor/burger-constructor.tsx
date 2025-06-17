@@ -38,6 +38,7 @@ export const BurgerConstructor: FC = () => {
 
     if (!isAuthenticated) {
       navigate('/login', { state: { from: window.location.pathname } });
+      return;
     }
 
     const order: string[] = [
