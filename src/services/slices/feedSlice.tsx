@@ -77,4 +77,5 @@ export const {
   totalSelector,
   totalTodaySelector
 } = feedSlice.selectors;
-export const feedReducer = feedSlice.reducer;
+const feedReducer = feedSlice.reducer;
+export default feedReducer;

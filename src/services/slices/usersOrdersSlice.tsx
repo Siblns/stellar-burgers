@@ -7,14 +7,14 @@ export const fetchUserOrders = createAsyncThunk(
   async () => getOrdersApi()
 );
 
-interface OrdersState {
-  userOrders: TOrder[];
+export interface OrdersState {
+  orders: TOrder[];
   userOrdersIsLoading: boolean;
   error: string | undefined;
 }
 
-const initialState: OrdersState = {
-  userOrders: [],
+export const initialState: OrdersState = {
+  orders: [],
   userOrdersIsLoading: false,
   error: undefined
 };
@@ -25,7 +25,7 @@ const ordersSlice = createSlice({
   reducers: {},
   selectors: {
     selectUserOrdersIsLoading: (state) => state.userOrdersIsLoading,
-    selectUserOrders: (state) => state.userOrders
+    selectUserOrders: (state) => state.orders
   },
   extraReducers: (builder) => {
     builder
@@ -38,10 +38,12 @@ const ordersSlice = createSlice({
       })
       .addCase(fetchUserOrders.fulfilled, (state, action) => {
         state.userOrdersIsLoading = false;
-        state.userOrders = action.payload;
+        state.orders = action.payload;
       });
   }
 });
 
-export const { selectUserOrders } = ordersSlice.selectors;
-export const ordersReducer = ordersSlice.reducer;
+export const { selectUserOrders, selectUserOrdersIsLoading } =
+  ordersSlice.selectors;
+const ordersReducer = ordersSlice.reducer;
+export default ordersReducer;

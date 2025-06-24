@@ -21,16 +21,16 @@ import {
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const constructorItems = useSelector(
+  const burgerConstructor = useSelector(
     selectConstructorBurger
-  ).constructorItems;
+  ).burgerConstructor;
 
   const orderRequest = useSelector(isOrderLoadingSelector);
   const orderModalData = useSelector(orderSelector);
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const onOrderClick = () => {
-    const { bun, ingredients } = constructorItems;
+    const { bun, ingredients } = burgerConstructor;
     if (!bun) {
       alert('Добавьте ингридиенты!');
       return;
@@ -57,19 +57,19 @@ export const BurgerConstructor: FC = () => {
 
   const price = useMemo(
     () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
+      (burgerConstructor.bun ? burgerConstructor.bun.price * 2 : 0) +
+      burgerConstructor.ingredients.reduce(
         (s: number, v: TConstructorIngredient) => s + v.price,
         0
       ),
-    [constructorItems]
+    [burgerConstructor]
   );
 
   return (
     <BurgerConstructorUI
       price={price}
       orderRequest={orderRequest}
-      constructorItems={constructorItems}
+      constructorItems={burgerConstructor}
       orderModalData={orderModalData}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}

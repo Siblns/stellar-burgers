@@ -11,7 +11,7 @@ import {
 export const Feed: FC = () => {
   const dispatch = useDispatch();
   const orders: TOrder[] = useSelector(ordersSelector);
-
+  console.log(orders);
   useEffect(() => {
     dispatch(fetchFeedsThunk());
   }, []);

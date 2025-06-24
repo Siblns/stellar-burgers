@@ -10,7 +10,7 @@ import { ingredientsSelector } from '../../services/slices/burger-ingredientSlic
 
 export const BurgerIngredients: FC = () => {
   const ingredients = useSelector(ingredientsSelector);
-
+  console.log(ingredients);
   const buns: Array<TIngredient> = ingredients.filter(
     (ingredient) => ingredient.type === 'bun'
   );
