@@ -12,14 +12,6 @@ import { bun, main, sauce } from '../../mocks/burgerConstructor';
 
 describe('check Constructor', () => {
   test('check ingredient', () => {
-    const initialState: IBurgerConstructorSliceState = {
-      burgerConstructor: {
-        bun: null,
-        ingredients: []
-      },
-      isIngredientsLoading: false,
-      error: null
-    };
     const newState = burgerConstructorReducer(
       initialState,
       addIngredients(main)
@@ -29,15 +21,6 @@ describe('check Constructor', () => {
   });
 
   test('Add bun', () => {
-    const initialState: IBurgerConstructorSliceState = {
-      burgerConstructor: {
-        bun: null,
-        ingredients: []
-      },
-      isIngredientsLoading: false,
-      error: null
-    };
-
     const newState = burgerConstructorReducer(
       initialState,
       addIngredients(bun)
