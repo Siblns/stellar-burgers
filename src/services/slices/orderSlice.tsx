@@ -70,4 +70,5 @@ export const orderSlice = createSlice({
 export const { clearOrder } = orderSlice.actions;
 export const { isOrderLoadingSelector, orderSelector, selectOrders } =
   orderSlice.selectors;
-export const orderReducer = orderSlice.reducer;
+const orderReducer = orderSlice.reducer;
+export default orderReducer;

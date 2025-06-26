@@ -62,7 +62,7 @@ interface IAuthState {
   loading: boolean;
 }
 
-const initialState: IAuthState = {
+export const initialState: IAuthState = {
   isAuthenticated: !!getCookie('accessToken'), // изначально проверяем токен
   user: {
     name: '',
@@ -76,7 +76,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    clearErrorMessage(state) {
+    clearErrorMessage: (state) => {
       state.error = '';
     }
   },
@@ -159,4 +159,5 @@ export const selectIsAuthenticated = (state: any) => state.auth.isAuthenticated;
 export const selectLoading = (state: any) => state.auth.loading;
 export const selectError = (state: any) => state.auth.error;
 
-export const authReducer = authSlice.reducer;
+const authReducer = authSlice.reducer;
+export default authReducer;
